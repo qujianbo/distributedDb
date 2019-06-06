@@ -4,7 +4,7 @@ import datetime
 # Connection to Mongo DB
 
 MONGODB_CONFIG = {
-    'host': '127.0.0.1',
+    'host': ['192.168.0.106','192.168.0.102'],
     'db_name': ['db_bj', 'db_hk'],
     'username': None,
     'password': None
@@ -20,11 +20,11 @@ class MongoConn():
 
 	def __init__(self, region):
 		if region == "Beijing":
-			self.conn = pymongo.MongoClient(host=MONGODB_CONFIG['host'], port=27017)
+			self.conn = pymongo.MongoClient(host=MONGODB_CONFIG['host'][1], port=27017)
 			self.db = self.conn['db_bj']
 
 		elif region == "Hong Kong":
-			self.conn = pymongo.MongoClient(host=MONGODB_CONFIG['host'], port=27016)
+			self.conn = pymongo.MongoClient(host=MONGODB_CONFIG['host'][0], port=27016)
 			self.db = self.conn['db_hk']
 
 		self.region = region

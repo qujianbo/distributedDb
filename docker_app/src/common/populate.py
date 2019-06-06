@@ -25,6 +25,6 @@ def update_pop():
 
     t1 = MongoConn('Beijing')
     t2 = MongoConn('Hong Kong')
-    generate_pop(t1,t2)
-    generate_pop(t2,t1)
+    generate_pop(t1)
+    generate_pop(t2)
 
