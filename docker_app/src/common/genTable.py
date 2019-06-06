@@ -15,8 +15,8 @@ cur_path = os.path.abspath(os.path.dirname(__file__))
 user_path = os.path.dirname(os.path.dirname(cur_path)) + '/dat/user.dat'
 article_path = os.path.dirname(os.path.dirname(cur_path)) + '/dat/article.dat'
 read_path = os.path.dirname(os.path.dirname(cur_path)) + '/dat/read.dat'
-beRead_path = os.path.dirname(os.path.dirname(cur_path)) + '/dat/beread.dat'
-pop_path = os.path.dirname(os.path.dirname(cur_path)) + '/dat/pop.dat'
+# beRead_path = os.path.dirname(os.path.dirname(cur_path)) + '/dat/beread.dat'
+# pop_path = os.path.dirname(os.path.dirname(cur_path)) + '/dat/pop.dat'
 
 # Beijing:60%   Hong Kong:40%
 # en:20%    zh:80%

@@ -22,10 +22,12 @@ class MongoConn():
 		if region == "Beijing":
 			self.conn = pymongo.MongoClient(host=MONGODB_CONFIG['host'], port=27017)
 			self.db = self.conn['db_bj']
+
 		elif region == "Hong Kong":
 			self.conn = pymongo.MongoClient(host=MONGODB_CONFIG['host'], port=27016)
 			self.db = self.conn['db_hk']
 
+		self.region = region
 	def get_collection(self, collection_name):
 		return self.db[collection_name]
 
