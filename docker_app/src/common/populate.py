@@ -6,11 +6,12 @@
 @desc:
 '''
 from src.Mongo_deploy import MongoConn
-from src.common.common import is_cur_day,is_cur_month,is_cur_week
+from src.common.common import is_cur_day,is_cur_month,is_cur_week,sort_list
+
 import time
 # import pprint
-from src.common.genTable import pop_path,beRead_path
-import json
+# from src.common.genTable import pop_path,beRead_path
+# import json
 def update_be_read():
 
     # t1 = MongoConn('Beijing')
@@ -76,61 +77,55 @@ def update_be_read():
 
 #
 def update_pop():
-    with open(pop_path,'w+') as f:
-        t2 = MongoConn('Hong Kong')
-        pop_rank = []
-        daily_rank = {}
-        week_rank = {}
-        month_rank = {}
 
-        d_articleAidList = []
-        w_articleAidList = []
-        m_articleAidList = []
+    t2 = MongoConn('Hong Kong')
+    # pop_rank = []
+    daily_rank = {}
+    week_rank = {}
+    month_rank = {}
+
+    be_read_collection = t2.get_collection('be_read')
+    cur_timestamp = int(time.time())
+
+    daily_rank["temporalGranularity"] = "daily"
+    daily_rank["timestamp"] = cur_timestamp
+
+    month_rank["temporalGranularity"] = "monthly"
+    month_rank["timestamp"] = cur_timestamp
+
+    week_rank["temporalGranularity"] = "weekly"
+    week_rank["timestamp"] = cur_timestamp
+
+    daily_rank["articleList"] = []
+    week_rank["articleList"] = []
+    month_rank["articleList"] = []
+
+    for be_read_item in be_read_collection.find():
+
+
         article_item = {}
-        be_read_collection = t2.get_collection('be_read')
-        cur_timestamp = int(time.time())
+        timestamp = int(be_read_item["timestamp"])
+        article_item["readNum"] = be_read_item["readNum"]
+        article_item["commentNum"] = be_read_item["commentNum"]
+        article_item["agreeNum"] = be_read_item["agreeNum"]
+        article_item["shareNum"] = be_read_item["shareNum"]
+        article_item["aid"] = be_read_item["aid"]
 
-        daily_rank["temporalGranularity"] = "daily"
-        daily_rank["timestamp"] = cur_timestamp
+        if is_cur_day(timestamp):
 
-        month_rank["temporalGranularity"] = "monthly"
-        month_rank["timestamp"] = cur_timestamp
+            daily_rank["articleList"].append(article_item)
 
-        week_rank["temporalGranularity"] = "weekly"
-        week_rank["timestamp"] = cur_timestamp
+        if is_cur_week(timestamp):
 
-        for be_read_item in be_read_collection.find():
+            week_rank["articleList"].append(article_item)
 
-            timestamp = int(be_read_item["timestamp"])
-            article_item["readNum"] = be_read_item["readNum"]
-            article_item["commentNum"] = be_read_item["commentNum"]
-            article_item["agreeNum"] = be_read_item["agreeNum"]
-            article_item["shareNum"] = be_read_item["shareNum"]
-            article_item["aid"] = be_read_item["aid"]
+        if is_cur_month(timestamp):
 
-            if is_cur_day(timestamp):
-
-                d_articleAidList.append(article_item)
-
-            if is_cur_week(timestamp):
-
-                w_articleAidList.append(article_item)
-
-            if is_cur_month(timestamp):
-
-                m_articleAidList.append(article_item)
-
-        daily_rank["articleList"] = d_articleAidList
-        week_rank["articleList"] = w_articleAidList
-        month_rank["articleList"] = m_articleAidList
-
-        json.dump(daily_rank, f)
-        f.write("\n")
-
-        json.dump(week_rank, f)
-        f.write("\n")
-        json.dump(month_rank, f)
-        f.write("\n")
-        pop_rank.append(daily_rank)
-        pop_rank.append(week_rank)
-        pop_rank.append(month_rank)
+            month_rank["articleList"].append(article_item)
+    # 默认按照阅读量排序
+    sort_list(daily_rank["articleList"],'1')
+    sort_list(week_rank["articleList"], '1')
+    sort_list(month_rank["articleList"], '1')
+    t2.get_collection("pop_rank").update({"temporalGranularity":"daily"},daily_rank,upsert=True)
+    t2.get_collection("pop_rank").update({"temporalGranularity": "weekly"}, week_rank,upsert=True)
+    t2.get_collection("pop_rank").update({"temporalGranularity": "monthly"}, month_rank,upsert=True)
