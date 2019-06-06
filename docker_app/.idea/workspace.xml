@@ -1,7 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="24a9c454-a3da-4d0e-ab5e-4ca0ab0d7f31" name="Default Changelist" comment="" />
+    <list default="true" id="24a9c454-a3da-4d0e-ab5e-4ca0ab0d7f31" name="Default Changelist" comment="更新一下函数">
+      <change beforePath="$PROJECT_DIR$/dat/article.dat" beforeDir="false" afterPath="$PROJECT_DIR$/dat/article.dat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dat/pop.dat" beforeDir="false" afterPath="$PROJECT_DIR$/dat/pop.dat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dat/read.dat" beforeDir="false" afterPath="$PROJECT_DIR$/dat/read.dat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dat/user.dat" beforeDir="false" afterPath="$PROJECT_DIR$/dat/user.dat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Mongo_deploy.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/Mongo_deploy.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/common/genTable.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/genTable.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/common/populate.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/populate.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/common/test.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/test.py" afterDir="false" />
+    </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -13,8 +22,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/common/genTable.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="270">
-              <caret line="112" column="21" selection-start-line="111" selection-start-column="8" selection-end-line="112" selection-end-column="21" />
+            <state relative-caret-position="98">
+              <caret line="79" column="19" selection-start-line="79" selection-start-column="10" selection-end-line="79" selection-end-column="19" />
               <folding>
                 <element signature="e#0#11#0" expanded="true" />
               </folding>
@@ -23,9 +32,14 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/dat/beread.dat">
+          <provider selected="true" editor-type-id="text-editor" />
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/common/setTable.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="243">
+            <state relative-caret-position="555">
               <caret line="37" column="9" selection-start-line="37" selection-start-column="9" selection-end-line="37" selection-end-column="9" />
               <folding>
                 <element signature="e#0#11#0" expanded="true" />
@@ -37,8 +51,11 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/common/test.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="225">
-              <caret line="19" column="28" lean-forward="true" selection-start-line="19" selection-start-column="28" selection-end-line="19" selection-end-column="28" />
+            <state relative-caret-position="375">
+              <caret line="25" selection-start-line="25" selection-end-line="25" />
+              <folding>
+                <element signature="e#672#714#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -46,8 +63,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/common/populate.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="113">
-              <caret line="32" selection-start-line="32" selection-end-line="32" />
+            <state relative-caret-position="-155">
+              <caret line="88" column="20" selection-start-line="88" selection-start-column="8" selection-end-line="88" selection-end-column="20" />
               <folding>
                 <element signature="e#100#138#0" expanded="true" />
               </folding>
@@ -56,10 +73,10 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/dat/read.dat">
+        <entry file="file://$PROJECT_DIR$/src/common/common.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="60">
-              <caret line="4" column="124" lean-forward="true" selection-start-line="4" selection-start-column="119" selection-end-line="4" selection-end-column="129" />
+            <state relative-caret-position="123">
+              <caret line="13" selection-start-line="13" selection-end-line="13" />
             </state>
           </provider>
         </entry>
@@ -67,8 +84,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/Mongo_deploy.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="306">
-              <caret line="52" column="43" selection-start-line="52" selection-start-column="43" selection-end-line="52" selection-end-column="43" />
+            <state relative-caret-position="-370">
+              <caret line="22" column="27" selection-start-line="22" selection-start-column="27" selection-end-line="22" selection-end-column="27" />
               <folding>
                 <element signature="e#0#14#0" expanded="true" />
               </folding>
@@ -89,16 +106,21 @@
     <findStrings>
       <find>insert_document</find>
       <find>one_read</find>
+      <find>posts</find>
     </findStrings>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
   </component>
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
         <option value="$PROJECT_DIR$/src/common/genTable_433507293.py" />
         <option value="$PROJECT_DIR$/src/common/setTable.py" />
+        <option value="$PROJECT_DIR$/src/common/common.py" />
         <option value="$PROJECT_DIR$/src/Mongo_deploy.py" />
-        <option value="$PROJECT_DIR$/src/common/test.py" />
         <option value="$PROJECT_DIR$/src/common/genTable.py" />
+        <option value="$PROJECT_DIR$/src/common/test.py" />
         <option value="$PROJECT_DIR$/src/common/populate.py" />
       </list>
     </option>
@@ -109,11 +131,13 @@
     <option name="width" value="1273" />
     <option name="height" value="701" />
   </component>
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
     <navigator proportions="" version="1">
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -141,10 +165,10 @@
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="settings.editor.selected.configurable" value="fileTemplates" />
   </component>
@@ -167,6 +191,27 @@
     </option>
   </component>
   <component name="RunManager" selected="Python.test">
+    <configuration name="common" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="docker_app" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/src/common" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/src/common/common.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <configuration name="genTable" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="docker_app" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -254,6 +299,7 @@
     <recent_temporary>
       <list>
         <item itemvalue="Python.test" />
+        <item itemvalue="Python.common" />
         <item itemvalue="Python.populate" />
         <item itemvalue="Python.setTable" />
         <item itemvalue="Python.genTable" />
@@ -275,14 +321,15 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="67" y="25" width="1293" height="743" extended-state="6" />
+    <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.17995265" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.13812155" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
-      <window_info anchor="bottom" id="Find" order="1" weight="0.32954547" />
-      <window_info anchor="bottom" id="Run" order="2" weight="0.32178217" />
-      <window_info anchor="bottom" id="Debug" order="3" visible="true" weight="0.27887788" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.32888147" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.32053423" />
+      <window_info active="true" anchor="bottom" id="Debug" order="3" visible="true" weight="0.27879798" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
@@ -295,33 +342,43 @@
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
     </layout>
   </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="更新一下函数" />
+    <option name="LAST_COMMIT_MESSAGE" value="更新一下函数" />
+  </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/src/common/populate.py</url>
-          <line>68</line>
-          <option name="timeStamp" value="3" />
+          <line>122</line>
+          <option name="timeStamp" value="8" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/src/common/populate.py</url>
-          <line>32</line>
-          <option name="timeStamp" value="4" />
+          <line>77</line>
+          <option name="timeStamp" value="14" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/src/common/test.py</url>
+          <line>25</line>
+          <option name="timeStamp" value="15" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/src/common/populate.py</url>
+          <line>112</line>
+          <option name="timeStamp" value="16" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/../lib/python3.6/dist-packages/pymongo/mongo_client.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="173">
-          <caret line="1515" selection-start-line="1515" selection-end-line="1515" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/../lib/python3.6/dist-packages/pymongo/mongo_client.py" />
     <entry file="file://$PROJECT_DIR$/dat/user.dat">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
+    <entry file="file://$PROJECT_DIR$/../lib/python3.6/dist-packages/pymongo/topology.py" />
+    <entry file="file://$PROJECT_DIR$/../lib/python3.6/dist-packages/pymongo/collection.py" />
     <entry file="file://$PROJECT_DIR$/dat/article.dat">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="135">
@@ -329,23 +386,58 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/../lib/python3.6/dist-packages/pymongo/topology.py">
+    <entry file="file://$PROJECT_DIR$/src/common/common.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="65">
-          <caret line="195" column="34" lean-forward="true" selection-start-line="195" selection-start-column="34" selection-end-line="195" selection-end-column="34" />
+        <state relative-caret-position="123">
+          <caret line="13" selection-start-line="13" selection-end-line="13" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/../lib/python3.6/dist-packages/pymongo/collection.py">
+    <entry file="file://$PROJECT_DIR$/src/Mongo_deploy.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="110">
-          <caret line="1444" selection-start-line="1444" selection-end-line="1444" />
+        <state relative-caret-position="-370">
+          <caret line="22" column="27" selection-start-line="22" selection-start-column="27" selection-end-line="22" selection-end-column="27" />
+          <folding>
+            <element signature="e#0#14#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/dat/be_read.dat">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-3285" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/dat/read.dat">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1740">
+          <caret line="4" column="124" selection-start-line="4" selection-start-column="119" selection-end-line="4" selection-end-column="129" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/dat/pop.dat">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-984">
+          <caret column="38440" selection-start-column="38440" selection-end-column="38440" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/dat/beread.dat">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/common/genTable.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="98">
+          <caret line="79" column="19" selection-start-line="79" selection-start-column="10" selection-end-line="79" selection-end-column="19" />
+          <folding>
+            <element signature="e#0#11#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/common/setTable.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="243">
+        <state relative-caret-position="555">
           <caret line="37" column="9" selection-start-line="37" selection-start-column="9" selection-end-line="37" selection-end-column="9" />
           <folding>
             <element signature="e#0#11#0" expanded="true" />
@@ -353,44 +445,20 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/common/genTable.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="270">
-          <caret line="112" column="21" selection-start-line="111" selection-start-column="8" selection-end-line="112" selection-end-column="21" />
-          <folding>
-            <element signature="e#0#11#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Mongo_deploy.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="306">
-          <caret line="52" column="43" selection-start-line="52" selection-start-column="43" selection-end-line="52" selection-end-column="43" />
-          <folding>
-            <element signature="e#0#14#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/dat/read.dat">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="60">
-          <caret line="4" column="124" lean-forward="true" selection-start-line="4" selection-start-column="119" selection-end-line="4" selection-end-column="129" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/common/test.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="225">
-          <caret line="19" column="28" lean-forward="true" selection-start-line="19" selection-start-column="28" selection-end-line="19" selection-end-column="28" />
+        <state relative-caret-position="375">
+          <caret line="25" selection-start-line="25" selection-end-line="25" />
+          <folding>
+            <element signature="e#672#714#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/common/populate.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="113">
-          <caret line="32" selection-start-line="32" selection-end-line="32" />
+        <state relative-caret-position="-155">
+          <caret line="88" column="20" selection-start-line="88" selection-start-column="8" selection-end-line="88" selection-end-column="20" />
           <folding>
             <element signature="e#100#138#0" expanded="true" />
           </folding>
