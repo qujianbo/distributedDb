@@ -7,6 +7,9 @@
 '''
 import time
 import operator
+import json
+from mongoengine.base import BaseDocument
+from src.common.genTable import gen_an_user
 local_time = time.localtime(time.time())
 
 
@@ -141,6 +144,7 @@ def generate_pop(t2):
 
     for be_read_item in be_read_collection.find():
 
+        #print(type(be_read_item))
         article_item = {}
         timestamp = int(be_read_item["timestamp"])
         article_item["readNum"] = be_read_item["readNum"]
@@ -165,3 +169,109 @@ def generate_pop(t2):
     t2.get_collection("pop_rank").update({"temporalGranularity": "daily"}, daily_rank, upsert=True)
     t2.get_collection("pop_rank").update({"temporalGranularity": "weekly"}, week_rank, upsert=True)
     t2.get_collection("pop_rank").update({"temporalGranularity": "monthly"}, month_rank, upsert=True)
+
+def available_value(value):
+    """
+    判断是否为redis能存储的数据类型： str or bytes
+    :param value:
+    :return:
+    """
+    if isinstance(value, str) or isinstance(value, bytes):
+        return value
+    return str(value)
+def stamp_2_str(timeStamp):
+
+    timeArray = time.localtime(timeStamp)
+    otherStyleTime = time.strftime("%Y--%m--%d %H:%M:%S", timeArray)
+    return otherStyleTime
+
+def utc_2_local(t):
+    return t.astimezone()
+
+
+# 使json能够转化datetime对象
+class DateEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, datetime.datetime):
+            return utc_2_local(obj).strftime('%Y-%m-%d %H:%M:%S')
+        elif isinstance(obj, datetime.date):
+            return obj.strftime("%Y-%m-%d")
+        else:
+            return json.JSONEncoder.default(self, obj)
+
+
+# 将 MongoDB 的 document转化为json形式
+def convert_mongo_2_json(o):
+    def convert(dic_data):
+        # 对于引用的Id和该条数据的Id，这里都是ObjectId类型的
+        from bson import ObjectId
+        # 字典遍历
+        for key, value in dic_data.items():
+            # 如果是列表，则递归将值清洗
+            if isinstance(value, list):
+                for index, l in enumerate(value):
+                    if isinstance(l, ObjectId):
+                        value[index] = str(l)
+                    elif isinstance(l, dict):
+                        convert(l)
+            else:
+                if isinstance(value, ObjectId):
+                    dic_data[key] = str(dic_data.get_one(key))
+        return dic_data
+
+    ret = {}
+    # 判断其是否为Document
+    if isinstance(o, BaseDocument):
+        """
+        转化为son形式，son的说明，摘自官方
+        SON data.
+        A subclass of dict that maintains ordering of keys and provides a
+        few extra niceties for dealing with SON. SON provides an API
+        similar to collections.OrderedDict from Python 2.7+.
+        """
+        data = o.to_mongo()
+        # 转化为字典
+        data = data.to_dict()
+        ret = convert(data)
+    # 将数据转化为json格式， 因json不能直接处理datetime类型的数据，故需要区分处理
+    ret = json.dumps(ret, cls=DateEncoder)
+    return ret
+
+def register_user(t,id):
+
+
+    doc = t.get_single_doc('user',{'uid':id})
+    if doc is None:
+        user = gen_an_user(int(id))
+        user["region"] = t.region
+        t.insert_document('user',user)
+        return user
+    else:
+        return None
+
+def validate_user(t,name):
+    doc = t.get_single_doc('user',{'name':name})
+    if doc is None:
+
+        return 0
+    else:
+        return 1
+
+def turn_2_user(t,name):
+
+    print('以下是您的个人信息：')
+    user_doc = t.get_single_doc('user',{'name':name})
+    print('''
+    用户id：{id}
+    用户名：{name}
+    性别：{sex}
+    邮箱：{email}
+    电话：{phone}
+    所属区域：{region}
+    创建时间：{time}
+    '''.format(id=user_doc["uid"],name=user_doc["name"],sex=user_doc["gender"],email=user_doc["email"]
+                ,phone=user_doc["phone"],region=user_doc["region"],time=stamp_2_str(int(user_doc["timestamp"]))))
+    return
+
+def get_top5():
+    pass

@@ -26,7 +26,7 @@ read_path = os.path.dirname(os.path.dirname(cur_path)) + '/dat/read.dat'
 # 0~99 credits
 
 def gen_an_user (i):
-    timeBegin = 1559539963
+    timeBegin = int(time.time())
     user = {}
     user["timestamp"] = str(timeBegin + i)
     user["uid"] = str(i)
@@ -50,7 +50,7 @@ def gen_an_user (i):
 # 50 tags
 # 2000 authors
 def gen_an_article (i):
-    timeBegin = 1559540035
+    timeBegin = int(time.time())
     article = {}
     article["timestamp"] = str(timeBegin + i)
     article["aid"] = str(i)
@@ -75,7 +75,7 @@ p["Beijing"+"zh"] = [1,0.3,0.3,0.2]
 p["Hong Kong"+"en"] = [1,0.3,0.3,0.2]
 p["Hong Kong"+"zh"] = [0.8,0.2,0.2,0.1]
 def gen_an_read (i):
-    timeBegin = 1559539963
+    timeBegin = int(time.time())
     read = {}
     read["timestamp"] = str(timeBegin + i*10000)
     read["uid"] = str(int(random() * USERS_NUM))

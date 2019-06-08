@@ -4,7 +4,7 @@ import datetime
 # Connection to Mongo DB
 
 MONGODB_CONFIG = {
-    'host': ['192.168.0.106','192.168.0.102'],
+    'host': ['192.168.0.106','192.168.0.104'],
     'db_name': ['db_bj', 'db_hk'],
     'username': None,
     'password': None

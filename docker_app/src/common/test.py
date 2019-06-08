@@ -20,7 +20,9 @@
 # # print(cur_path, dir_path)
 # user_path = os.path.dirname(os.path.dirname(cur_path)) + '/dat/user.dat'
 # print(user_path)
-from src.common.populate import update_pop
-from src.common.populate import update_be_read
-update_be_read()
-update_pop()
+# from src.common.populate import update_pop
+# from src.common.populate import update_be_read
+# update_be_read()
+# update_pop()
+
+
