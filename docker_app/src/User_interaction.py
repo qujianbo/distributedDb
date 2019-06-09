@@ -5,7 +5,8 @@
 @time: 2019/6/7 上午8:26
 @desc:
 '''
-from src.common.funOfMongo import register_user,validate_user,turn_2_user,get_top5
+from src.common.mediator import validate_user,turn_2_user,get_top5
+from src.common.funOfMongo import register_user
 from src.Mongo_deploy import MongoConn
 from random import random
 class UserInterface():

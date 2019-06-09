@@ -6,17 +6,18 @@
 @desc:
 '''
 from redis.client import Redis as PyRedis
-import pickle
-from src.common.funOfMongo import available_value
+from src.common.common import available_value
 
 
 class Redis(PyRedis):
     # session = None
 
-    def __init__(self, host, port, db=None, redis_password=None, decode_responses=True, enable=True):
+    def __init__(self, host, port, db=None, redis_password=None, decode_responses=True, enable=True,region="Beijing"):
         # print(host, str(port))
         self.enable = enable
+        self.region = region
         super().__init__(host=host, port=port, db=db, password=redis_password, decode_responses=decode_responses)
+        print(self.client_getname())
 
     def get(self, name, default=None):
         if not self.enable:
@@ -30,39 +31,6 @@ class Redis(PyRedis):
             return None
         return super().set(name, available_value(value), ex=ex, px=px, nx=nx, xx=xx)
 
-    def set_dict(self, name, value):
-        if not self.enable:
-            return None
-        return self.set_pickle(name, value)
-        # return self.set(name, json.dumps(value))
-
-    def get_dict(self, name, default=None):
-        if default is None:
-            default = {}
-
-        if not self.enable:
-            return {}
-        return self.get_pickle(name, default)
-        # res = self.get(name)
-        # if res:
-        #     return json.loads(res)
-        # return default
-
-    def set_pickle(self, name, value):
-        if not self.enable:
-            return None
-        return self.set(name, pickle.dumps(value, 0).decode())
-
-    def get_pickle(self, name, default=None):
-        if not self.enable:
-            return None
-        res = self.get(name)
-        return pickle.loads(res.encode()) if res else default
-
-    # def smembers(self, name, default=[]):
-    #     res = super().smembers(name)
-    #     return [val.decode() for val in list(res)] if res else default
-
     def delete_by_pattern(self, pattern):
         if not self.enable:
             return -1
@@ -71,6 +39,3 @@ class Redis(PyRedis):
             return 1
         return self.delete(*keys)
 
-r1 = Redis('127.0.0.1',port=6379,db="db_bj")
-
-r2 = Redis('127.0.0.1',port=6380,db="db_hk")

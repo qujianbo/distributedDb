@@ -24,7 +24,5 @@
 # from src.common.populate import update_be_read
 # update_be_read()
 # update_pop()
-from src.Redis_deploy import Redis
 
-r = Redis('127.0.0.1',port=6379,db="db_bj")
 

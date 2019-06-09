@@ -11,9 +11,9 @@ from src.common.genTable import ARTICLES_NUM
 from random import random
 
 from src.Mongo_deploy import MongoConn
-
+from src.common.common import is_cur_month,is_cur_week,is_cur_day,stamp_2_str
 from src.common.genTable import gen_an_user,gen_an_read
-local_time = time.localtime(time.time())
+
 t1 = MongoConn("Beijing")
 t2 = MongoConn("Hong Kong")
 
@@ -153,12 +153,6 @@ def generate_pop(t2):
     t2.get_collection("pop_rank").update({"temporalGranularity": "monthly"}, month_rank, upsert=True)
 
 
-def stamp_2_str(timeStamp):
-
-    timeArray = time.localtime(timeStamp)
-    otherStyleTime = time.strftime("%Y--%m--%d %H:%M:%S", timeArray)
-    return otherStyleTime
-
 def register_user(t,id):
 
     doc = t.get_single_doc('user',{'uid':id})
@@ -177,11 +171,11 @@ def validate_user(name):
     doc2 = t2.get_single_doc('user', {'name': name})
     if doc1 is None:
         if doc2 is None:
-            return None,False
+            return None,None,False
         else:
-            return t2,True
+            return doc2,t2,True
     else:
-        return t1,True
+        return doc1,t1,True
 
 def turn_2_user(t,name):
 
