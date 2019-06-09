@@ -7,11 +7,18 @@
 '''
 import time
 import operator
+from src.common.genTable import ARTICLES_NUM
 import json
+from random import random
 from mongoengine.base import BaseDocument
-from src.common.genTable import gen_an_user
+from src.Mongo_deploy import MongoConn
+from src.Redis_deploy import Redis
+from src.common.genTable import gen_an_user,gen_an_read
 local_time = time.localtime(time.time())
-
+t1 = MongoConn("Beijing")
+t2 = MongoConn("Hong Kong")
+r1 = Redis('127.0.0.1',port=6379,db="db_bj")
+r2 = Redis('127.0.0.1',port=6380,db="db_hk")
 
 def is_cur_day(timestamp):
     if time.localtime(timestamp).tm_yday == local_time.tm_yday:
@@ -64,8 +71,6 @@ def generate_be_read(t2,t):
 
     for article_item in article_collection.find():
         # print(type(item))
-        # belong to db_bj t1
-        # if article_item["category"] == "science":
         # 找出所有文章id一致的read_item list
         read_item = read_collection.find(dict(aid=article_item["aid"]))
 
@@ -249,13 +254,18 @@ def register_user(t,id):
     else:
         return None
 
-def validate_user(t,name):
-    doc = t.get_single_doc('user',{'name':name})
-    if doc is None:
+def validate_user(name):
+    # 先到redis里找
 
-        return 0
+    doc1 = t1.get_single_doc('user',{'name':name})
+    doc2 = t2.get_single_doc('user', {'name': name})
+    if doc1 is None:
+        if doc2 is None:
+            return None,False
+        else:
+            return t2,True
     else:
-        return 1
+        return t1,True
 
 def turn_2_user(t,name):
 
@@ -271,7 +281,78 @@ def turn_2_user(t,name):
     创建时间：{time}
     '''.format(id=user_doc["uid"],name=user_doc["name"],sex=user_doc["gender"],email=user_doc["email"]
                 ,phone=user_doc["phone"],region=user_doc["region"],time=stamp_2_str(int(user_doc["timestamp"]))))
-    return
+    while True:
+        selection = input('''
+        1.热榜推荐
+        2.随机推送
+        3.文章搜索
+        4.q退回主界面
+        ''')
+        if selection == '1':
+            get_top5(t)
+        elif selection == '2':
+            article_title = "title" + str(int(random()*ARTICLES_NUM))
+            show_article(t,article_title,name)
+        elif selection == '3':
+            article_title = input("选择要阅读的文章标题：(q回退)")
+            if article_title == 'q':
+                continue
+            show_article(t,article_title,name)
+        elif selection == 'q':
+            return
+        else:
+            print("少年,请正常输入,不要为难为我")
+def show_article(t,article_title,user_name):
 
-def get_top5():
-    pass
+    article_doc = t.get_single_doc("article",{"title":article_title})
+    if article_doc is None:
+        if t.region == "Beijing":
+            article_doc = t2.get_single_doc("article",{"title":article_title})
+        else:
+            article_doc = t1.get_single_doc("article", {"title": article_title})
+        if article_doc is None:
+            print("查询不到相应文章,请重新输入！")
+            return
+    aid = article_doc["aid"]
+
+    read_item = gen_an_read(int(aid))
+    read_item["aid"] = aid
+    read_item["uid"] = t.get_single_doc('user',{'name':user_name})["uid"]
+    t.insert_document("read",read_item)
+    print('''
+    文章信息：
+    标题：{title} 类别：{category} 标签：{tags} 语言：{en}
+    作者：{author}
+    摘要：{abstract}
+    正文：{content} 
+    '''.format(title=article_doc["title"],category=article_doc["category"],tags=article_doc["articleTags"],
+               en=article_doc["language"],author=article_doc["authors"],abstract=article_doc["abstract"],
+               content=article_doc["text"]))
+
+def get_top5(t):
+
+    daily = t.get_single_doc("pop_rank",{"temporalGranularity": "daily"})["articleList"]
+    week = t.get_single_doc("pop_rank",{"temporalGranularity": "weekly"})["articleList"]
+    month = t.get_single_doc("pop_rank", {"temporalGranularity": "monthly"})["articleList"]
+
+    print("最受欢迎阅读前五如下：")
+    print("当日统计")
+    for i in range(5):
+        print('''
+        书名：{id} 阅读量：{read} 评论量：{comment} 点赞数：{agree} 分享数：{share}
+        '''.format(id=daily[i]["aid"],read=daily[i]["readNum"],comment=daily[i]["commentNum"],
+                   agree=daily[i]["agreeNum"],share=daily[i]["shareNum"]))
+
+    print("每周统计")
+    for i in range(5):
+        print('''
+        书名：{id} 阅读量：{read} 评论量：{comment} 点赞数：{agree} 分享数：{share}
+        '''.format(id=week[i]["aid"],read=week[i]["readNum"],comment=week[i]["commentNum"],
+                   agree=week[i]["agreeNum"],share=week[i]["shareNum"]))
+
+    print("当月统计")
+    for i in range(5):
+        print('''
+        书名：{id} 阅读量：{read} 评论量：{comment} 点赞数：{agree} 分享数：{share}
+        '''.format(id=month[i]["aid"],read=month[i]["readNum"],comment=month[i]["commentNum"],
+                   agree=month[i]["agreeNum"],share=month[i]["shareNum"]))

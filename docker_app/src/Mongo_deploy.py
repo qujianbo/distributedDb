@@ -4,27 +4,22 @@ import datetime
 # Connection to Mongo DB
 
 MONGODB_CONFIG = {
-    'host': ['192.168.0.106','192.168.0.104'],
+    # 'host': ['192.168.0.106','192.168.0.105'],
     'db_name': ['db_bj', 'db_hk'],
     'username': None,
     'password': None
 }
-
-post = {"author": "Mike",
-        "text": "My first blog post!",
-        "tags": ["mongodb", "python", "pymongo"],
-        "date": datetime.datetime.utcnow()}
 
 
 class MongoConn():
 
 	def __init__(self, region):
 		if region == "Beijing":
-			self.conn = pymongo.MongoClient(host=MONGODB_CONFIG['host'][1], port=27017)
+			self.conn = pymongo.MongoClient(host='127.0.0.1', port=27017)
 			self.db = self.conn['db_bj']
 
 		elif region == "Hong Kong":
-			self.conn = pymongo.MongoClient(host=MONGODB_CONFIG['host'][0], port=27016)
+			self.conn = pymongo.MongoClient(host='127.0.0.1', port=27016)
 			self.db = self.conn['db_hk']
 
 		self.region = region
@@ -60,6 +55,8 @@ class MongoConn():
 		else:
 			return self.db[collection_name].count_documents(query)
 
-	def get_dbnames(self):
-		return self.conn.database_names()
-
+	# def increase_one_doc(self,collection_name,field=''):
+	# 	if field == '':
+	# 		return
+	# 	else:
+	# 		self.db[collection_name].find_one_and_update({'$inc': {field: 1})

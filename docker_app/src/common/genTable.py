@@ -1,6 +1,7 @@
 import json
 from random import random
 import os
+import time
 # USERS_NUM = 10000
 # ARTICLES_NUM = 200000
 # READS_NUM = 1000000

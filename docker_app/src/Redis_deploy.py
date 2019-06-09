@@ -5,9 +5,9 @@
 @time: 2019/6/6 下午8:28
 @desc:
 '''
-from redis import Redis as PyRedis
+from redis.client import Redis as PyRedis
 import pickle
-from src.common.common import available_value
+# from src.common.common import available_value
 class Redis(PyRedis):
     # session = None
 
