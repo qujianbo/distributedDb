@@ -6,7 +6,7 @@
 @desc:
 '''
 
-from src.common.common import *
+from src.common.funOfMongo import *
 
 # import pprint
 # from src.common.genTable import pop_path,beRead_path

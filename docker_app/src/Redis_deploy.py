@@ -7,7 +7,9 @@
 '''
 from redis.client import Redis as PyRedis
 import pickle
-# from src.common.common import available_value
+from src.common.funOfMongo import available_value
+
+
 class Redis(PyRedis):
     # session = None
 
@@ -68,3 +70,7 @@ class Redis(PyRedis):
         if keys == [] or keys == ():
             return 1
         return self.delete(*keys)
+
+r1 = Redis('127.0.0.1',port=6379,db="db_bj")
+
+r2 = Redis('127.0.0.1',port=6380,db="db_hk")
