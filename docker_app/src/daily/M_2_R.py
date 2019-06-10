@@ -21,21 +21,32 @@ class SynchronizeService:
         generate_pop(t2)
     # Key: “Popular_Rank” +temporalGranularity
     def sync_pop(self,M,R,temporalGranularity):
-        pop_collection = M.get_single_doc("pop_rank",temporalGranularity)["articleList"]
+        pop_collection = M.get_single_doc("pop_rank",{"temporalGranularity": temporalGranularity})["articleList"]
+        #["articleList"]
         insert_key = "Popular_Rank" + temporalGranularity
-        for i in range(5,0,-1):
-            R.lpush(insert_key,pop_collection[i])
+        list_len = 5 if len(pop_collection) >= 5 else len(pop_collection)
+        for i in range(list_len):
+            R.lpop(insert_key)
+        for i in range(list_len):
+            R.rpush(insert_key,pop_collection[i])
+
     # 这里写具体的同步逻辑
     def synchronize(self):
         # 先搞定热搜
-        
+        key_word = ["daily","weekly","monthly"]
+        for key in key_word:
+            self.sync_pop(t1,r1,key)
+            self.sync_pop(t2,r2,key)
+        print("synchronize pop done")
 
     def timerFun(self,schedTimer):
         flag = 0
         while True:
             now = datetime.datetime.now()
-            if now == schedTimer:
+            if now.second == schedTimer.second and now.minute == schedTimer.minute and now.hour == schedTimer.hour:
                 self.mongo_calculate()
+                import time
+                time.sleep(1)
                 self.synchronize()
 
                 flag = 1
@@ -47,6 +58,6 @@ class SynchronizeService:
 
 if __name__ == '__main__':
     ss = SynchronizeService()
-    schedTimer = datetime.datetime(2019,6,9,8,0)
+    schedTimer = datetime.datetime.now()
     print('run the timer task at {0}'.format(schedTimer))
     ss.timerFun(schedTimer)

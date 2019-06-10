@@ -39,3 +39,14 @@ class Redis(PyRedis):
             return 1
         return self.delete(*keys)
 
+    def lpush(self, name, value):
+        if not self.enable:
+            return None
+
+        return super().lpush(name,available_value(value))
+
+    def rpush(self, name, value):
+        if not self.enable:
+            return None
+
+        return super().rpush(name,available_value(value))

@@ -49,10 +49,12 @@ class UserInterface():
                 if user_id == 'q':
                     continue
                 user = register_user(self.t, user_id)
+                if user == 0:
+                    continue
                 if user is None:
                     print('该用户已经存在，请直接登录')
                 else:
-                    print('注册成功')
+                    print('注册成功,用户名为:%s' %user["name"])
             elif to_find == 'q':
                 break
             else:

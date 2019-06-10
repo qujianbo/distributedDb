@@ -16,6 +16,8 @@ from src.Redis_deploy import Redis
 from src.common.funcOfRedis import save_2_redis
 from src.common.funcOfRedis import r1,r2
 
+
+
 def validate_user(name):
     # 首先去redis里找
     doc,r,flag = r_validate_user(name)
@@ -24,6 +26,8 @@ def validate_user(name):
         # 向redis里插入这条数据
         if t.region == r1.region:
             save_2_redis(r1,name,doc)
+        else:
+            save_2_redis(r2, name, doc)
         return t,flag
     else:
         return r,flag

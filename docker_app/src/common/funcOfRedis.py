@@ -12,9 +12,19 @@ from src.common.genTable import gen_an_read
 from random import random
 from src.common.common import str_2_dict
 from src.common.common import stamp_2_str
+from src.common.funOfMongo import show_article as mshow_article
+from src.common.funOfMongo import R2M
 r1 = Redis('127.0.0.1',port=6379,db=0,region="Beijing")
 
 r2 = Redis('127.0.0.1',port=6380,db=0,region="Hong Kong")
+
+
+def get_from_list(r,key,start,end):
+    list = r.lrange(name=key,start=start,end=end)
+    result = []
+    for i in range(start,end):
+        result.append(str_2_dict(list[i]))
+    return result
 
 def save_2_redis(r,key,o):
     r.set(key,o)
@@ -72,69 +82,90 @@ def turn_2_user(t,name):
         else:
             print("少年,请正常输入,不要为难为我")
 
-# 这里如果read表的主键为“READ”+uid，存储article list
-# 如果主键为“READ”+uid+aid，存储具体的内容
+# 文章的主键为aid
 def show_article(t,article_title,user_name):
 
-    article_doc = getFromRedis(t,article_title)
+    uid = getFromRedis(t,user_name)["uid"]
+    # 这里如果read表的主键为“READ”+uid，存储article set
+    read_key1 = "READ" + uid
+    import re
+    aid = re.split('[a-z]+',article_title)[1]
+    query_key = "READ" + uid + aid
+    article_doc = getFromRedis(t,query_key)
+
     if article_doc is None:
         if t.region == "Beijing":
             article_doc = getFromRedis(r2,article_title)
         else:
             article_doc = getFromRedis(r1,article_title)
+        # 这里同步热更新
         if article_doc is None:
-            print("查询不到相应文章,请重新输入！")
-            return
-    aid = article_doc["aid"]
+            from src.common.funOfMongo import t1
+            article_doc = mshow_article(t1,article_title,user_name)
+            if article_doc is None:
+                return
+            aid = article_doc["aid"]
+            # 如果主键为“READ”+uid+aid，存储具体的内容
+            read_key2 = "READ" + uid + aid
+            t.sadd(read_key1,aid)
 
-    read_item = gen_an_read(int(aid))
-    read_item["aid"] = aid
-    read_item["uid"] = getFromRedis(t,user_name)["uid"]
-    main_key = "READ" + read_item["uid"] + aid
-    main_key_ = "READ" + read_item["uid"]
-    save_2_redis(t,main_key,read_item)
-    t.lpush(main_key_,aid)
+            save_2_redis(t,read_key2,article_doc)
 
-    print('''
-    文章信息：
-    标题：{title} 类别：{category} 标签：{tags} 语言：{en}
-    作者：{author}
-    摘要：{abstract}
-    正文：{content} 
-    '''.format(title=article_doc["title"],category=article_doc["category"],tags=article_doc["articleTags"],
-               en=article_doc["language"],author=article_doc["authors"],abstract=article_doc["abstract"],
-               content=article_doc["text"]))
+    else:
+        # 这里依旧将read_doc交给mongo处理
+        # aid = article_doc["aid"]
+        # read_key2 = "READ" + uid + aid
+        read_key2 = query_key
+        read_item = gen_an_read(int(aid))
+        read_item["aid"] = aid
+        read_item["uid"] = uid
 
+        print('''
+        文章信息：
+        标题：{title} 类别：{category} 标签：{tags} 语言：{en}
+        作者：{author}
+        摘要：{abstract}
+        正文：{content} 
+        '''.format(title=article_doc["title"],category=article_doc["category"],tags=article_doc["articleTags"],
+                   en=article_doc["language"],author=article_doc["authors"],abstract=article_doc["abstract"],
+                   content=article_doc["text"]))
+        # 做同步的热更新
+        R2M(t, "read", read_item)
+        t.sadd(read_key1,aid)
+        save_2_redis(t, read_key2, read_item)
 # 主键设置为Key: “Popular_Rank” + temporalGranularity
 def get_top5(t):
 
     query_keyD = "Popular_Rank" + "daily"
     query_keyW = "Popular_Rank" + "weekly"
     query_keyM = "Popular_Rank" + "monthly"
-    daily = getFromRedis(t,query_keyD)
+    d_len = 5 if t.llen(query_keyD)>=5 else t.llen(query_keyD)
+    w_len = 5 if t.llen(query_keyW)>=5 else t.llen(query_keyW)
+    m_len = 5 if t.llen(query_keyM)>=5 else t.llen(query_keyM)
+    daily = get_from_list(t,query_keyD,0,d_len)
+    week = get_from_list(t,query_keyW,0,w_len)
+    month = get_from_list(t,query_keyM,0,m_len)
     if daily is None:
         # 这是不允许的，除非mongo里没有
         print("暂无热榜")
-    week = getFromRedis(t,query_keyW)
-    month = getFromRedis(t,query_keyM)
 
     print("最受欢迎阅读前五如下：")
     print("当日统计")
-    for i in range(5):
+    for i in range(d_len):
         print('''
         书名：{id} 阅读量：{read} 评论量：{comment} 点赞数：{agree} 分享数：{share}
         '''.format(id=daily[i]["aid"],read=daily[i]["readNum"],comment=daily[i]["commentNum"],
                    agree=daily[i]["agreeNum"],share=daily[i]["shareNum"]))
 
     print("每周统计")
-    for i in range(5):
+    for i in range(w_len):
         print('''
         书名：{id} 阅读量：{read} 评论量：{comment} 点赞数：{agree} 分享数：{share}
         '''.format(id=week[i]["aid"],read=week[i]["readNum"],comment=week[i]["commentNum"],
                    agree=week[i]["agreeNum"],share=week[i]["shareNum"]))
 
     print("当月统计")
-    for i in range(5):
+    for i in range(m_len):
         print('''
         书名：{id} 阅读量：{read} 评论量：{comment} 点赞数：{agree} 分享数：{share}
         '''.format(id=month[i]["aid"],read=month[i]["readNum"],comment=month[i]["commentNum"],

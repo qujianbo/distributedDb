@@ -25,4 +25,9 @@
 # update_be_read()
 # update_pop()
 
-
+from functools import reduce
+list = ['5','4','5','5']
+func = lambda x, y: x if y in x else x + [y]
+list = reduce(func, [[], ] + list)
+for i in list:
+    print(i)

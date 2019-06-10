@@ -39,6 +39,8 @@ def sort_list(article_list,key):
 # 根据传进来的连接生成be_read表
 def generate_be_read(t2,t):
 
+    # 先删除当前be_read表
+    t2.get_collection("be_read").drop()
     Be_read1 = []
     Be_read2 = []
 
@@ -85,7 +87,15 @@ def generate_be_read(t2,t):
                 if single_read["shareOrNot"] == "1":
                     one_read["shareUidList"].append(single_read["uid"])
                     one_read["shareNum"] = one_read["shareNum"] + 1
+
         if one_read["readNum"]:
+            # 这里三个list需要去重
+            from functools import reduce
+            func = lambda x, y: x if y in x else x + [y]
+            one_read["readUidList"] = reduce(func, [[], ] + one_read["readUidList"])
+            one_read["commentUidList"] = reduce(func, [[], ] + one_read["commentUidList"])
+            one_read["agreeUidList"] = reduce(func, [[], ] + one_read["agreeUidList"])
+            one_read["shareUidList"] = reduce(func, [[], ] + one_read["shareUidList"])
             if article_item["category"] == "science":
                 Be_read1.append(one_read)
                 Be_read2.append(one_read)
@@ -104,6 +114,8 @@ def generate_be_read(t2,t):
 
 def generate_pop(t2):
 
+    # 删除旧表
+    t2.get_collection("pop_rank").drop()
     daily_rank = {}
     week_rank = {}
     month_rank = {}
@@ -147,14 +159,28 @@ def generate_pop(t2):
     sort_list(daily_rank["articleList"], '1')
     sort_list(week_rank["articleList"], '1')
     sort_list(month_rank["articleList"], '1')
-
-    t2.get_collection("pop_rank").update({"temporalGranularity": "daily"}, daily_rank, upsert=True)
-    t2.get_collection("pop_rank").update({"temporalGranularity": "weekly"}, week_rank, upsert=True)
-    t2.get_collection("pop_rank").update({"temporalGranularity": "monthly"}, month_rank, upsert=True)
+    # upsert create if not exist
+    t2.insert_document("pop_rank",daily_rank)
+    t2.insert_document("pop_rank",week_rank)
+    t2.insert_document("pop_rank",month_rank)
 
 
 def register_user(t,id):
+    import re
 
+    if bool(re.search('[a-z]', id)):
+        print('请输入纯数字的id')
+        return 0
+    while True:
+        region = input('''所属地区
+        1.北京
+        2.香港
+        ''')
+        if region=='1':
+            t = t1
+        else:
+            t = t2
+        break
     doc = t.get_single_doc('user',{'uid':id})
     if doc is None:
         user = gen_an_user(int(id))
@@ -223,7 +249,7 @@ def show_article(t,article_title,user_name):
             article_doc = t1.get_single_doc("article", {"title": article_title})
         if article_doc is None:
             print("查询不到相应文章,请重新输入！")
-            return
+            return None
     aid = article_doc["aid"]
 
     read_item = gen_an_read(int(aid))
@@ -239,31 +265,39 @@ def show_article(t,article_title,user_name):
     '''.format(title=article_doc["title"],category=article_doc["category"],tags=article_doc["articleTags"],
                en=article_doc["language"],author=article_doc["authors"],abstract=article_doc["abstract"],
                content=article_doc["text"]))
-
+    return article_doc
 def get_top5(t):
 
     daily = t.get_single_doc("pop_rank",{"temporalGranularity": "daily"})["articleList"]
     week = t.get_single_doc("pop_rank",{"temporalGranularity": "weekly"})["articleList"]
     month = t.get_single_doc("pop_rank", {"temporalGranularity": "monthly"})["articleList"]
-
+    d_len = 5 if len(daily) >=5 else len(daily)
+    w_len = 5 if len(week) >= 5 else len(week)
+    m_len = 5 if len(month) >= 5 else len(month)
     print("最受欢迎阅读前五如下：")
     print("当日统计")
-    for i in range(5):
+    for i in range(d_len):
         print('''
         书名：{id} 阅读量：{read} 评论量：{comment} 点赞数：{agree} 分享数：{share}
         '''.format(id=daily[i]["aid"],read=daily[i]["readNum"],comment=daily[i]["commentNum"],
                    agree=daily[i]["agreeNum"],share=daily[i]["shareNum"]))
 
     print("每周统计")
-    for i in range(5):
+    for i in range(w_len):
         print('''
         书名：{id} 阅读量：{read} 评论量：{comment} 点赞数：{agree} 分享数：{share}
         '''.format(id=week[i]["aid"],read=week[i]["readNum"],comment=week[i]["commentNum"],
                    agree=week[i]["agreeNum"],share=week[i]["shareNum"]))
 
     print("当月统计")
-    for i in range(5):
+    for i in range(m_len):
         print('''
         书名：{id} 阅读量：{read} 评论量：{comment} 点赞数：{agree} 分享数：{share}
         '''.format(id=month[i]["aid"],read=month[i]["readNum"],comment=month[i]["commentNum"],
                    agree=month[i]["agreeNum"],share=month[i]["shareNum"]))
+# 提供给redis往mongo存入数据的接口
+def R2M(r,name,o):
+    if r.region == t1.region:
+        t1.insert_document(name,o)
+    else:
+        t2.insert_document(name,o)
